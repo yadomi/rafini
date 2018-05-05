@@ -4,6 +4,7 @@ const { version } = require('../package.json')
 const { resolve, basename, extname, dirname, join } = require('path')
 const { existsSync: exist, renameSync: rename } = require('fs')
 const { map, concat } = require('ramda')
+const sanitize = require('sanitize-filename')
 const chalk = require('chalk')
 
 const command = async filenames => {
@@ -47,9 +48,16 @@ const command = async filenames => {
     for (const entry of transform) {
       try {
         entry.tmdb = await tmdb(entry.title, CLI.withTmdb)
-      } catch (e) {
-        console.log(e)
-      }
+        if (entry.tmdb.title && entry.tmdb.release_date) {
+          const year = new Date(entry.tmdb.release_date).getFullYear()
+          const title = `${entry.tmdb.title} (${year})`
+          const newname = sanitize(concat(title, entry.extension))
+
+          entry.title = title
+          entry.path.to = newname
+          entry.absolute.to = join(dirname(entry.absolute.to), newname)
+        }
+      } catch (e) {}
     }
   }
 
