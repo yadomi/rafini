@@ -60,5 +60,5 @@ exports.banned = [
   'vostfr',
   'x264',
   'x265',
-  'xvid',
-];
+  'xvid'
+]
