@@ -1,11 +1,10 @@
-const { refine, formatFFprobe } = require('rafini')
+const { refine, ffprobe, tmdb } = require('rafini')
 const CLI = require('commander')
 const { version } = require('../package.json')
 const { resolve, basename, extname, dirname, join } = require('path')
 const { existsSync: exist, renameSync: rename } = require('fs')
 const { map, concat } = require('ramda')
 const chalk = require('chalk')
-const ffprobe = require('ffprobe')
 
 const command = async filenames => {
   const transform = map(path => {
@@ -38,11 +37,19 @@ const command = async filenames => {
 
   if (CLI.withFfprobe) {
     for (const entry of transform) {
-      const probe = await ffprobe(entry.absolute.from, {
-        path: CLI.withFfprobe
-      })
+      try {
+        entry.metadata = await ffprobe(entry.absolute.from, CLI.withFfprobe)
+      } catch (e) {}
+    }
+  }
 
-      entry.metadata = formatFFprobe(probe)
+  if (CLI.withTmdb) {
+    for (const entry of transform) {
+      try {
+        entry.tmdb = await tmdb(entry.title, CLI.withTmdb)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 
@@ -79,8 +86,9 @@ CLI.version(version)
   .option('-f, --format [format]', 'set output format: json, pretty, stdout')
   .option(
     '--with-ffprobe <ffprobe-bin>',
-    'Use ffprobe to extract metadata. Must pass path to ffprobe binary'
+    'use ffprobe to extract metadata. Only pertinent with --format json. Must pass path to ffprobe binary'
   )
+  .option('--with-tmdb <API_KEY>', 'use themoviedb.org API for better match.')
   .option('-w, --rename', 'rename files in place')
   .parse(process.argv)
 
