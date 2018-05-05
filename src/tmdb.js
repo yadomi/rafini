@@ -31,7 +31,7 @@ const format = compose(
 
 const ROOT = 'https://api.themoviedb.org/3/search/movie'
 
-exports.tmdb = (title, apikey) => {
+exports.tmdb = (title, { apikey, language }) => {
   const query = compose(trim, replace(/\((19|20)\d{2}\)/g, ''))(title)
   const year = compose(head, match(/(19|20)\d{2}/g))(title)
 
@@ -40,7 +40,7 @@ exports.tmdb = (title, apikey) => {
     map(([key, value]) => `${key}=${encodeURIComponent(value)}`),
     toPairs,
     filter(Boolean)
-  )({ query, year })
+  )({ query, year, language })
 
   const URL = `${ROOT}?api_key=${apikey}&${params}`
   return request(URL).then(format)

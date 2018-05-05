@@ -22,6 +22,7 @@
     "ramda": "^0.25.0",
     "request-promise-native": "^1.0.5",
     "sanitize-filename": "^1.6.1",
+    "single-line-log": "^1.1.2",
     "to-title-case": "^1.0.0"
   }
 }

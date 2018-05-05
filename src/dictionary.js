@@ -36,7 +36,6 @@ exports.banned = [
   'proper',
   'repack',
   'retail',
-  'rip',
   'screener',
   'subbed',
   'subforced',
@@ -57,7 +56,7 @@ exports.banned = [
   'unrated',
   'unsubbed',
   'vostfr',
-  'vostfr',
+  'vosten',
   'x264',
   'x265',
   'xvid'
