@@ -12,8 +12,8 @@ Rafini use RegEx, string manipulation and external web services (such as [themov
 
 ### As a module
 
-    const Rafini = require('rafini');
-    Rafini("Steve.Jobs.2015.FRENCH.BDRip.XviD-ViVi.avi")
+    const { refine } = require('rafini');
+    const title = refine("Steve.Jobs.2015.FRENCH.BDRip.XviD-ViVi.avi")
 
 ### As CLI
 
