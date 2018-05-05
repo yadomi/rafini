@@ -36,6 +36,7 @@ exports.banned = [
   'proper',
   'repack',
   'retail',
+  'brrip',
   'screener',
   'subbed',
   'subforced',
