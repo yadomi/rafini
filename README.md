@@ -17,7 +17,7 @@ Rafini use RegEx, string manipulation and external web services (such as [themov
 
 ### As CLI
 
-    rafini "Steve.Jobs.2015.FRENCH.BDRip.XviD-ViVi.avi"
+    rafini --rename "Steve.Jobs.2015.FRENCH.BDRip.XviD-ViVi.avi"
 
 ---
 

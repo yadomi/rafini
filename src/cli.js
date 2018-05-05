@@ -3,11 +3,11 @@ const CLI = require('commander')
 const { version } = require('../package.json')
 const { resolve, basename, extname, dirname, join } = require('path')
 const { existsSync: exist, renameSync: rename } = require('fs')
-const { concat } = require('ramda')
+const { map, concat } = require('ramda')
 const chalk = require('chalk')
 
 const command = filenames => {
-  for (const path of filenames) {
+  const transform = map(path => {
     const filepath = resolve(path)
     if (!exist(filepath)) {
       console.error('No such file or directory: ', filepath)
@@ -17,23 +17,55 @@ const command = filenames => {
     const filename = basename(filepath)
     const extension = extname(filename)
 
-    const newname = concat(refine(filename), extension)
+    const title = refine(filename)
+    const newname = concat(title, extension)
     const newpath = join(dirname(filepath), newname)
-    console.log(chalk.yellow(filename) + ' -> ' + chalk.green(newname))
-    if (!CLI.dryRun) {
-      rename(filepath, newpath)
+    return {
+      title,
+      extension,
+      path: {
+        from: filename,
+        to: newname
+      },
+      absolute: {
+        from: filepath,
+        to: newpath
+      }
+    }
+  }, filenames)
+
+  if (CLI.rename) {
+    for (const entry of transform) {
+      rename(entry.absolute.from, entry.absolute.to)
+    }
+  }
+
+  if (CLI.format) {
+    switch (CLI.format) {
+      case 'json':
+        console.log(JSON.stringify(transform, null, 2))
+        break
+      case 'pretty':
+        for (const entry of transform) {
+          console.log(
+            chalk.yellow(entry.path.from) + ' -> ' + chalk.green(entry.path.to)
+          )
+        }
+        break
+      case 'stdout':
+        for (const entry of transform) {
+          console.log(entry.path.to)
+        }
     }
   }
 }
 
 CLI.version(version)
-  .option(
-    '-ws, --with-webservices',
-    'use web services such as TMDB.org for better match'
-  )
-  .option('--dry-run', "don't rename files, only output what rafini will do")
+  .description('Refine filename to human readable movie title')
   .arguments('<filenames...>')
   .action(command)
+  .option('-f, --format [format]', 'set output format: json, pretty, stdout')
+  .option('-w, --rename', 'rename files in place')
   .parse(process.argv)
 
 const args = process.argv.slice(2)
