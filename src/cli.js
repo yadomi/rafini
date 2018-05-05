@@ -94,7 +94,7 @@ CLI.version(version)
   .option('-f, --format [format]', 'set output format: json, pretty, stdout')
   .option(
     '--with-ffprobe <ffprobe-bin>',
-    'use ffprobe to extract metadata. Only pertinent with --format json. Must pass path to ffprobe binary'
+    'use ffprobe to extract metadata. Only make sense with --format json. Must pass path to ffprobe binary'
   )
   .option('--with-tmdb <API_KEY>', 'use themoviedb.org API for better match.')
   .option('-w, --rename', 'rename files in place')
