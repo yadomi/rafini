@@ -1,5 +1,7 @@
 # Rafini
 
+[![buddy pipeline](https://app.buddy.works/yadomi/rafini/pipelines/pipeline/135848/badge.svg?token=b3f63e58ef1bf9d26d887d832e2deb41f2c9b66ad170d2c1dcf489027f666b2c)](https://app.buddy.works/yadomi/rafini/pipelines/pipeline/135848) ![Codestyle Standard](https://img.shields.io/badge/codestyle-standard-brightgreen.svg)
+
 Rafini use RegEx, string manipulation and external web services (such as [themoviedb.org](https://www.themoviedb.org/)) to refine bad movies filename to clean, good looking one.
 
 ## Instalation
