@@ -1,12 +1,13 @@
-const { refine } = require('rafini')
+const { refine, formatFFprobe } = require('rafini')
 const CLI = require('commander')
 const { version } = require('../package.json')
 const { resolve, basename, extname, dirname, join } = require('path')
 const { existsSync: exist, renameSync: rename } = require('fs')
 const { map, concat } = require('ramda')
 const chalk = require('chalk')
+const ffprobe = require('ffprobe')
 
-const command = filenames => {
+const command = async filenames => {
   const transform = map(path => {
     const filepath = resolve(path)
     if (!exist(filepath)) {
@@ -20,6 +21,7 @@ const command = filenames => {
     const title = refine(filename)
     const newname = concat(title, extension)
     const newpath = join(dirname(filepath), newname)
+
     return {
       title,
       extension,
@@ -33,6 +35,16 @@ const command = filenames => {
       }
     }
   }, filenames)
+
+  if (CLI.withFfprobe) {
+    for (const entry of transform) {
+      const probe = await ffprobe(entry.absolute.from, {
+        path: CLI.withFfprobe
+      })
+
+      entry.metadata = formatFFprobe(probe)
+    }
+  }
 
   if (CLI.rename) {
     for (const entry of transform) {
@@ -65,6 +77,10 @@ CLI.version(version)
   .arguments('<filenames...>')
   .action(command)
   .option('-f, --format [format]', 'set output format: json, pretty, stdout')
+  .option(
+    '--with-ffprobe <ffprobe-bin>',
+    'Use ffprobe to extract metadata. Must pass path to ffprobe binary'
+  )
   .option('-w, --rename', 'rename files in place')
   .parse(process.argv)
 
