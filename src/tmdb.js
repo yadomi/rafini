@@ -3,7 +3,7 @@ const {
   compose,
   pick,
   head,
-  prop,
+  propOr,
   map,
   join,
   toPairs,
@@ -13,18 +13,19 @@ const {
   match
 } = require('ramda')
 
-const format = compose(
-  pick([
-    'title',
-    'id',
-    'original_title',
-    'poster_path',
-    'release_date',
-    'overview'
-  ]),
+const format = pick([
+  'title',
+  'id',
+  'original_title',
+  'poster_path',
+  'release_date',
+  'overview'
+])
+
+const parse = compose(
   head,
-  prop('results'),
-  data => JSON.parse(data)
+  propOr([], 'results'),
+  payload => JSON.parse(payload)
 )
 
 // const format = a => console.log(a)
@@ -43,5 +44,8 @@ exports.tmdb = (title, { apikey, language }) => {
   )({ query, year, language })
 
   const URL = `${ROOT}?api_key=${apikey}&${params}`
-  return request(URL).then(format)
+  return request(URL).then(payload => {
+    const match = parse(payload);
+    return match ? format(match) : null;
+  });
 }

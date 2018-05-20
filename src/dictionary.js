@@ -62,5 +62,8 @@ exports.banned = [
   'vosten',
   'x264',
   'x265',
-  'xvid'
+  'xvid',
+  'vff',
+  'hra',
+  'fwd',
 ]
