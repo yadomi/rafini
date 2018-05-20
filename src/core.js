@@ -27,7 +27,7 @@ const removeBannedChars = (exports.removeBannedChars = compose(
   trim,
   replace(/\s+/g, SPACE),
   replace(/[^a-zA-Zéèçàû 0-9]+/g, SPACE),
-  replace(/[-_]+/g, EMPTY),
+  replace(/[-_]+/g, SPACE),
   replace(/(\[.*\])/, EMPTY)
 ))
 
