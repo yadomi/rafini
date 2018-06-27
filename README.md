@@ -28,4 +28,4 @@ Ruby is fine, Ruby is good, but Ruby doesn't integrate well in Javascript/NodeJS
 
 ### Why the name Rafini ?
 
-`Rafini` mean `refine` in esperento
+`Rafini` mean `refine` in Esperanto
